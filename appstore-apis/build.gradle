@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.example'
+version = 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(":appstore-core:infra")
+    implementation project(":appstore-core:domain")
+
+
+}
+
+test {
+    useJUnitPlatform()
+}
