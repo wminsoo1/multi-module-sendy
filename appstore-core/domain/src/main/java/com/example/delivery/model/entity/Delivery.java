@@ -73,6 +73,10 @@ public class Delivery {
         this.deliveryFee = deliveryFee;
     }
 
+    public void updateDeliveryStatus(DeliveryStatus deliveryStatus) {
+        this.deliveryStatus = deliveryStatus;
+    }
+
     public void updateReservationNumber(String reservationNumber) {
         this.reservationNumber = reservationNumber;
     }
