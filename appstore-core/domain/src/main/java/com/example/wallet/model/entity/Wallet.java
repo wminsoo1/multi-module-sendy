@@ -28,6 +28,10 @@ public class Wallet {
         this.member = member;
     }
 
+    public void updateBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
     private Wallet(Long id, Member member, BigDecimal balance) {
         this.id = id;
         this.member = member;
