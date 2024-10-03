@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 
 @Getter
-public class MemberSaveRequest {
+public class SignUpRequest {
 
     @NotBlank(message = "이름은 공백일 수 없습니다.")
     private String name;
@@ -19,7 +19,7 @@ public class MemberSaveRequest {
     @NotBlank(message = "이메일은 공백일 수 없습니다.")
     private String email;
 
-    private MemberSaveRequest() {
+    private SignUpRequest() {
     }
 
     public Member toMember() {
