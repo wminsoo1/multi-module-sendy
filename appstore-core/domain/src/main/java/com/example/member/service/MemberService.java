@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.example.member.exception.MemberErrorCode.DUPLICATE_NAME;
 import static com.example.member.exception.MemberErrorCode.DUPLICATE_PASSWORD;
 
 
@@ -45,7 +46,8 @@ public class MemberService {
 
     public MemberSaveResponse signUp(SignUpRequest signUpRequest) {
         validateDuplicateEmail(signUpRequest.getEmail());
-
+        validateDuplicateName(signUpRequest.getName());
+        
         final Member member = signUpRequest.toMember();
         member.updatePassword(passwordEncoder.encode(signUpRequest.getPassword())); //동시성?
         member.updateRoles(Roles.USER);
@@ -58,6 +60,13 @@ public class MemberService {
         }
 
         return MemberSaveResponse.fromMember(savedMember);
+    }
+
+    private void validateDuplicateName(String name) {
+        final boolean isDuplicate = memberRepository.findByName(name).isPresent();
+        if (isDuplicate) {
+            throw MemberException.fromErrorCode(DUPLICATE_NAME);
+        }
     }
 
     private void validateDuplicateEmail(String email) {

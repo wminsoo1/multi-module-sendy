@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 public enum MemberErrorCode implements ErrorCode {
 
     MEMBER_NOT_FOUND("멤버가 존재하지 않습니다", HttpStatus.NOT_FOUND),
-    DUPLICATE_PASSWORD("이메일이 이미 존재합니다", HttpStatus.CONFLICT);
+    DUPLICATE_PASSWORD("이메일이 이미 존재합니다", HttpStatus.CONFLICT),
+    DUPLICATE_NAME("아이디가 이미 존재합니다", HttpStatus.CONFLICT);
 
     private final String message;
     private final HttpStatus httpStatus;
