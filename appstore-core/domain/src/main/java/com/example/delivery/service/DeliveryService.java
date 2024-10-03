@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.example.delivery.exception.DeliveryErrorCode.*;
+import static com.example.delivery.model.DeliveryStatus.*;
 import static com.example.member.exception.MemberErrorCode.MEMBER_NOT_FOUND;
 
 @Service
@@ -51,6 +52,7 @@ public class DeliveryService {
         final Delivery delivery = deliverySaveRequest.toDelivery();
         delivery.updateMember(member);
         delivery.updateDeliveryFee(10000); //결제금액은 프론트에서 결정
+        delivery.updateDeliveryStatus(PAYMENT_PENDING);
 
         String reservationNumber = ReservationNumberGenerator.withDate(deliveryRepository.count());
         if (deliveryRepository.existsByReservationNumber(reservationNumber)) {
