@@ -26,7 +26,7 @@ public class SecurityConfig {
             .httpBasic(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((authorize) -> authorize
-                    .requestMatchers("/api/member/sign-in", "/api/member/sign-up").permitAll()
+                    .requestMatchers("/api/member/sign-in", "/api/member/sign-up", "/**").permitAll()
                     .anyRequest().authenticated())
             .logout((logout) -> logout
                     .logoutSuccessUrl("/login")
