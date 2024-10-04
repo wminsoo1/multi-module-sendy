@@ -6,12 +6,14 @@ import com.example.delivery.model.entity.Delivery;
 import com.example.delivery.model.entity.StopOver;
 import com.example.delivery.repository.DeliveryRepository;
 import com.example.delivery.repository.StopOverRepository;
+import com.example.member.exception.MemberException;
+import com.example.member.model.entity.Member;
+import com.example.member.repository.MemberRepository;
 import com.example.wallet.exception.WalletException;
 import com.example.wallet.model.dto.response.PaymentResponse;
 import com.example.wallet.model.entity.Wallet;
-import com.example.wallet.model.dto.request.ChargeWalletRequest;
+import com.example.wallet.model.dto.request.ChargeRequest;
 import com.example.wallet.model.dto.request.CreateWalletRequest;
-import com.example.wallet.model.dto.request.PaymentRequest;
 import com.example.wallet.repository.WalletRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ import java.util.List;
 
 import static com.example.delivery.exception.DeliveryErrorCode.*;
 import static com.example.delivery.model.DeliveryStatus.*;
+import static com.example.member.exception.MemberErrorCode.*;
 import static com.example.wallet.exception.WalletErrorCode.*;
 
 @Service
@@ -35,20 +38,25 @@ public class WalletService {
     private final WalletRepository walletRepository;
     private final DeliveryRepository deliveryRepository;
     private final StopOverRepository stopOverRepository;
+    private final MemberRepository memberRepository;
 
     public void createWallet(CreateWalletRequest createWalletRequest) {
-        validateWalletMaxCount(createWalletRequest.getMemberId());
+        Long memberId = createWalletRequest.getMemberId();
+        validateWalletMaxCount(memberId);
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MEMBER_NOT_FOUND));
 
         Wallet wallet = CreateWalletRequest.toWallet(createWalletRequest);
-
+        wallet.updateMember(member);
         walletRepository.save(wallet);
     }
 
-    public BigDecimal charge(Long walletId, ChargeWalletRequest chargeWalletRequest) {
+    public BigDecimal charge(Long walletId, ChargeRequest chargeRequest) {
         Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> new WalletException(WALLET_NOT_FOUND));
 
-        BigDecimal chargeBalance = chargeWalletRequest.getChargeBalance();
+        BigDecimal chargeBalance = chargeRequest.getChargeBalance();
         if (chargeBalance.compareTo(BigDecimal.ZERO) <= 0) {
             throw new WalletException(NEGATIVE_OR_ZERO_CHARGE_AMOUNT);
         }
@@ -58,19 +66,19 @@ public class WalletService {
         return wallet.getBalance();
     }
 
-    public PaymentResponse payment(Long walletId, String reservationNumber, PaymentRequest paymentRequest) {
+    public PaymentResponse payment(Long walletId, String reservationNumber) {
         Wallet wallet = walletRepository.findById(walletId)
                 .orElseThrow(() -> new WalletException(WALLET_NOT_FOUND));
 
         Delivery delivery = deliveryRepository.findByReservationNumber(reservationNumber)
                 .orElseThrow(() -> new DeliveryException(DELIVERY_NOT_FOUND));
 
-        BigDecimal paymentBalance = paymentRequest.getPaymentBalance();
+        BigDecimal paymentBalance = delivery.getDeliveryFee();
         if (paymentBalance.compareTo(BigDecimal.ZERO) <= 0) {
             throw new WalletException(NEGATIVE_OR_ZERO_PAYMENT_AMOUNT);
         }
 
-        if (wallet.getBalance().compareTo(paymentRequest.getPaymentBalance()) < 0) {
+        if (wallet.getBalance().compareTo(paymentBalance) < 0) {
             throw new WalletException(INSUFFICIENT_BALANCE);
         }
 
