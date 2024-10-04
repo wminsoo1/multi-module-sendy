@@ -24,6 +24,8 @@ public class QWallet extends EntityPathBase<Wallet> {
 
     public final NumberPath<java.math.BigDecimal> balance = createNumber("balance", java.math.BigDecimal.class);
 
+    public final EnumPath<com.example.wallet.model.CardCompany> cardCompany = createEnum("cardCompany", com.example.wallet.model.CardCompany.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final com.example.member.model.entity.QMember member;
