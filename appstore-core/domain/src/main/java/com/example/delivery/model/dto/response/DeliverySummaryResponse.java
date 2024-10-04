@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -28,9 +29,9 @@ public class DeliverySummaryResponse {
 
     private String deliveryOptions;
 
-    private double deliveryFee; //BigDemical
+    private BigDecimal deliveryFee; //BigDemical
 
-    private DeliverySummaryResponse(String reservationNumber, LocalDateTime deliveryDate, DeliveryAddress deliveryAddress, Vehicle vehicle, Integer stopOverCount, String deliveryOptions, double deliveryFee) {
+    private DeliverySummaryResponse(String reservationNumber, LocalDateTime deliveryDate, DeliveryAddress deliveryAddress, Vehicle vehicle, Integer stopOverCount, String deliveryOptions, BigDecimal deliveryFee) {
         this.reservationNumber = reservationNumber;
         this.deliveryDate = deliveryDate;
         this.deliveryAddress = deliveryAddress;
