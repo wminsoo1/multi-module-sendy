@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ChargeRequest {
+public class ChargeWalletRequest {
 
     @NotNull(message = "충전 금액은 필수 입력 항목입니다.")
     @DecimalMin(value = "0.0", inclusive = false, message = "충전 금액은 0보다 커야 합니다.")

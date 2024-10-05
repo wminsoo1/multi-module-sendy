@@ -36,7 +36,7 @@ public class DeliveryCacheService {
     public DeliverySummaryResponseList getCompletedDeliveriesSummary(Long memberId) {
         validatedMemberExisted(memberId);
 
-        List<Delivery> deliveries = deliveryRepository.findCompletedDeliveriesByMemberId(memberId, DeliveryStatus.DELIVERY_COMPLETED);
+        List<Delivery> deliveries = deliveryRepository.findCompletedDeliveriesByMemberId(memberId, DeliveryStatus.COMPLETED);
         if (deliveries == null) {
             throw new DeliveryException(DELIVERY_NOT_FOUND);
         }
