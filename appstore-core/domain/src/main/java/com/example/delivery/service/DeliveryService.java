@@ -24,7 +24,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +51,7 @@ public class DeliveryService {
 
         final Delivery delivery = deliverySaveRequest.toDelivery();
         delivery.updateMember(member);
-        delivery.updateDeliveryFee(BigDecimal.valueOf(10000)); //결제금액은 프론트에서 결정
+        delivery.updateDeliveryFee(10000); //결제금액은 프론트에서 결정
         delivery.updateDeliveryStatus(PAYMENT_PENDING);
 
         String reservationNumber = ReservationNumberGenerator.withDate(deliveryRepository.count());
@@ -145,7 +144,8 @@ public class DeliveryService {
     public List<DeliverySummaryResponse> getNotCompletedDeliveriesSummary(Long memberId) {
         validatedMemberExisted(memberId);
 
-        List<Delivery> deliveries = deliveryRepository.findNotCompletedDeliveriesByMemberId(memberId,   DELIVERY_COMPLETED);
+        List<Delivery> deliveries = deliveryRepository.findNotCompletedDeliveriesByMemberId(memberId,
+                List.of(DeliveryStatus.COMPLETED, DeliveryStatus.IN_PROGRESS, DeliveryStatus.DRAFT));
         if (deliveries == null) {
             throw new DeliveryException(DELIVERY_NOT_FOUND);
         }

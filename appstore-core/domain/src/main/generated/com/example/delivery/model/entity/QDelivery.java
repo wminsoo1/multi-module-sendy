@@ -28,7 +28,7 @@ public class QDelivery extends EntityPathBase<Delivery> {
 
     public final DateTimePath<java.time.LocalDateTime> deliveryDate = createDateTime("deliveryDate", java.time.LocalDateTime.class);
 
-    public final NumberPath<java.math.BigDecimal> deliveryFee = createNumber("deliveryFee", java.math.BigDecimal.class);
+    public final NumberPath<Double> deliveryFee = createNumber("deliveryFee", Double.class);
 
     public final StringPath deliveryOptions = createString("deliveryOptions");
 
